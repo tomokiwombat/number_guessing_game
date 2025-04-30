@@ -31,10 +31,11 @@ while true; do
   read GUESS
 
   # Check if input is an integer
-  if ! [[ $GUESS =~ ^[0-9]+$ ]]; then
+  if [[ ! $GUESS =~ ^[0-9]+$ ]]; then
     echo "That is not an integer, guess again:"
     continue
   fi
+
 
   (( NUMBER_OF_GUESSES++ ))
 
