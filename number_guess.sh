@@ -13,12 +13,12 @@ read USERNAME
 # Check if user exists
 USER_INFO=$($PSQL "SELECT games_played, best_game FROM users WHERE username='$USERNAME'")
 
-# If new user/user doesn't exist
+# If new user
 if [[ -z $USER_INFO ]]; then
   echo "Welcome, $USERNAME! It looks like this is your first time here."
   $PSQL "INSERT INTO users(username, games_played, best_game) VALUES('$USERNAME', 0, NULL)"
 else
-  # Existing user/user exists
+  # Existing user
   IFS="|" read GAMES_PLAYED BEST_GAME <<< "$USER_INFO"
   echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 fi
@@ -31,11 +31,10 @@ while true; do
   read GUESS
 
   # Check if input is an integer
-  if [[ ! $GUESS =~ ^[0-9]+$ ]]; then
+  if ! [[ $GUESS =~ ^[0-9]+$ ]]; then
     echo "That is not an integer, guess again:"
     continue
   fi
-
 
   (( NUMBER_OF_GUESSES++ ))
 
@@ -48,4 +47,13 @@ while true; do
     echo "You guessed it in $NUMBER_OF_GUESSES tries. The secret number was $SECRET_NUMBER. Nice job!"
 
     # Update games played
-    $PSQL "UPDATE users
+    $PSQL "UPDATE users SET games_played = games_played + 1 WHERE username='$USERNAME'"
+
+    # Update best game if necessary
+    CURRENT_BEST=$($PSQL "SELECT best_game FROM users WHERE username='$USERNAME'")
+    if [[ -z $CURRENT_BEST || $NUMBER_OF_GUESSES -lt $CURRENT_BEST ]]; then
+      $PSQL "UPDATE users SET best_game = $NUMBER_OF_GUESSES WHERE username='$USERNAME'"
+    fi
+    break
+  fi
+done
