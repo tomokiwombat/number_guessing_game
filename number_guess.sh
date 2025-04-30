@@ -18,7 +18,7 @@ if [[ -z $USER_INFO ]]; then
   echo "Welcome, $USERNAME! It looks like this is your first time here."
   $PSQL "INSERT INTO users(username, games_played, best_game) VALUES('$USERNAME', 0, NULL)"
 else
-  # Existing user
+  # Existing user/user exists
   IFS="|" read GAMES_PLAYED BEST_GAME <<< "$USER_INFO"
   echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 fi
