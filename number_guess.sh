@@ -13,7 +13,7 @@ read USERNAME
 # Check if user exists
 USER_INFO=$($PSQL "SELECT games_played, best_game FROM users WHERE username='$USERNAME'")
 
-# If new user
+# If new user/user doesn't exist
 if [[ -z $USER_INFO ]]; then
   echo "Welcome, $USERNAME! It looks like this is your first time here."
   $PSQL "INSERT INTO users(username, games_played, best_game) VALUES('$USERNAME', 0, NULL)"
