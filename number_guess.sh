@@ -65,8 +65,7 @@ else
         UPDATE_USER=$($PSQL "UPDATE users SET games_played=$GAMES_PLAYED WHERE username='$USERNAME'")
     fi
 fi
+
 if [[ $NUMBER = $GUESS_NUMBER ]]; then
   echo "You guessed it in $GUESS_COUNT tries. The secret number was $GUESS_NUMBER. Nice job!"
   fi
-
-
